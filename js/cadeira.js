@@ -2,9 +2,8 @@ var camera, scene, render;
 var geometry, material, mesh;
 var controls;
 
-function addSeatWheelSuport(obj, x, y, z, axis, degree){
-    geometry = new THREE.CylinderGeometry(0.1, 0.1, 1, 8);
-    
+function addSeatWheelSuport(obj, x, y, z, axis, degree){    
+    geometry = new THREE.CylinderGeometry(0.1, 0.1, 1, 8);    
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     
@@ -48,15 +47,16 @@ function addSeatBase(obj, x, y, z){
 
 function createSeat(){
 
-    //var seat = new THREE.Object3D();
-
     var topPart = new THREE.Object3D();
     var downPart = new THREE.Object3D();
     
     material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
 
+    //top part of the chair (back and base seat§)
     addSeatBase(topPart, 0, 0, 0);
-    addSeatBack(topPart, 0, 1.70, 1.72);//1.45, 1.8
+    addSeatBack(topPart, 0, 1.70, 1.72);
+
+    //down part of the chair (legs and wheels)
     addSeatLiftCylinder(downPart, 0, -0.75, 0);
     addSeatWheelSuport(downPart, 0, -1.40, -0.60, 'x', 0);
     addSeatWheelSuport(downPart, -0.53, -1.40, -0.18, 'z', 1);
@@ -128,12 +128,8 @@ function onKeyDown(event){
 function init(){
 
     renderer = new THREE.WebGLRenderer();
-
     renderer.setSize(window.innerWidth, window.innerHeight);
-
-    document.body.appendChild(renderer.domElement);
-
-    
+    document.body.appendChild(renderer.domElement);    
 
     createScene();
     createCamera();
@@ -142,8 +138,7 @@ function init(){
     window.addEventListener('resize', onResize);
     window.addEventListener('keydown', onKeyDown);
 
-    controls = new THREE.OrbitControls(camera, renderer.domELement);
-    
+    controls = new THREE.OrbitControls(camera, renderer.domELement);   
 
     
 }
