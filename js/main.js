@@ -2,6 +2,16 @@ var camera, scene, render;
 var geometry, material, mesh;
 var controls;
 
+function addPlane(){
+    var geometry = new THREE.PlaneGeometry( 20, 20 , 20 );
+    var material = new THREE.MeshBasicMaterial( {color: 0xa9a9a9, side: THREE.DoubleSide} );
+    var plane = new THREE.Mesh(geometry, material);
+    plane.rotateX(Math.PI / 2);
+    plane.position.set(0, -2, 0);
+    scene.add( plane );
+}
+
+
 function animate(){
     
     requestAnimationFrame(animate);
@@ -13,6 +23,7 @@ function createScene(){
     scene = new THREE.Scene();
     scene.add(new THREE.AxesHelper(1));
 
+    addPlane();
     createSeat();
     createTable();
     createLamp();
