@@ -9,7 +9,7 @@ function addSeatWheelSuport(obj, x, y, z, axis, degree){
     
     if(axis == 'x')
         mesh.rotateX(Math.PI / 2); //Rotating mesh by 90 degree in X axis. 
-    if(axis == 'z')  
+    else if(axis == 'z')  
         mesh.rotateZ(Math.PI / 2); //Rotating mesh by 90 degree in Y axis. 
 
     if (degree == 1)
@@ -60,9 +60,9 @@ function createSeat(){
     addSeatLiftCylinder(downPart, 0, -0.75, 0);
     addSeatWheelSuport(downPart, 0, -1.40, -0.60, 'x', 0);
     addSeatWheelSuport(downPart, -0.53, -1.40, -0.18, 'z', 1);
-    //addSeatWheelSuport(downPart, 0, -1.40, 0.60, 'x', 0);
+    addSeatWheelSuport(downPart, 0, -1.40, 0.60, 'x', 0);
     addSeatWheelSuport(downPart, 0.53, -1.40, -0.18, 'z', 2);
-    //addSeatWheelSuport(downPart, 0.60, -1.40, 0, 'z', 0);
+    addSeatWheelSuport(downPart, 0.60, -1.40, 0, 'z', 0);
 
     scene.add(topPart);
     scene.add(downPart);
@@ -89,6 +89,7 @@ function createScene(){
     scene.add(new THREE.AxesHelper(1));
 
     createSeat();
+    
 }
  
 function animate(){
