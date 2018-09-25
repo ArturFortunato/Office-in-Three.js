@@ -15,15 +15,16 @@ function createScene(){
 
     createSeat();
     createTable();
+    createLamp();
 }
 
 function createCamera(){
 
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-    camera.position.x = 5;
-    camera.position.y = 5;
-    camera.position.z = 5;
+    camera.position.x = 8;
+    camera.position.y = 8;
+    camera.position.z = 8;
     camera.lookAt(scene.position);
 }
 
@@ -65,9 +66,7 @@ function init(){
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    document.body.appendChild(renderer.domElement);
-
-    
+    document.body.appendChild(renderer.domElement);    
 
     createScene();
     createCamera();
@@ -77,7 +76,4 @@ function init(){
     window.addEventListener('keydown', onKeyDown);
 
     controls = new THREE.OrbitControls(camera, renderer.domELement);
-    
-
-    
 }
