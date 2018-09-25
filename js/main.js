@@ -20,9 +20,9 @@ function createCamera(){
 
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-    camera.position.x = 5;
-    camera.position.y = 5;
-    camera.position.z = 5;
+    camera.position.x = 3;
+    camera.position.y = 3;
+    camera.position.z = 3;
     camera.lookAt(scene.position);
 }
 
