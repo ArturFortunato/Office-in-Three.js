@@ -89,7 +89,7 @@ function createSeat(){
     topPart = new THREE.Object3D();
     downPart = new THREE.Object3D();
     
-    material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
+    material = new THREE.MeshBasicMaterial({color: 0xeee8aa, wireframe: true});
 
     //top part of the chair (back, base seat and arms)
     addSeatBase(topPart, 0, 0, 0);
