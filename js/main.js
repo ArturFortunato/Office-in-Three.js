@@ -87,5 +87,10 @@ function init(){
     window.addEventListener('resize', onResize);
     window.addEventListener('keydown', onKeyDown);
 
+    window.addEventListener('onkeypress', onKeyDown);
+    window.addEventListener('onkeyup', onKeyDown);
+
+    
+
     controls = new THREE.OrbitControls(camera, renderer.domELement);
 }
