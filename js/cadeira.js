@@ -74,7 +74,7 @@ function createSeat(){
     
     material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
 
-    //top part of the chair (back and base seat§)
+    //top part of the chair (back, base seat and arms)
     addSeatBase(topPart, 0, 0, 0);
     addSeatBack(topPart, 0, 1.70, 1.72);
 
