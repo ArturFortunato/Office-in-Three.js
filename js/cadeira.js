@@ -96,6 +96,10 @@ function createSeat(){
 
 
     scene.add(topPart);
+    scene.updateMatrixWorld(true);
     scene.add(downPart);
+    scene.updateMatrixWorld(true);
     
+    chair_obj.push(topPart);
+    chair_obj.push(downPart);
 }

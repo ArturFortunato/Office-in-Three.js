@@ -1,6 +1,13 @@
 var camera, scene, render;
 var geometry, material, mesh;
 var controls;
+var chair_obj = [];
+var table_obj = [];
+var lamp_obj = [];
+var acceleration = 0.1;
+var velocity = 0.01;
+var chair_pos = new THREE.Vector3();
+var clock = new THREE.Clock();
 
 function addPlane(){
     var geometry = new THREE.PlaneGeometry( 20, 20 , 20 );
@@ -58,6 +65,22 @@ function onKeyDown(event){
     var code = event.keyCode;
 
     switch(code){
+        case 16: //Left
+        console.log("ahoy");
+            chair_pos.addScalar(velocity + 0.5*acceleration*acceleration);
+            for(var i = 0; i < chair_obj.length; i++){
+                console.log("ola");
+                chair_pos.applyMatrix4(chair_obj[i].matrixWorld);
+                chair_obj[i].position.set(chair_pos.x, chair_pos.y, chair_pos.z);
+                console.log(chair_pos.x + ',' + chair_pos.y + ',' + chair_pos.z);
+            }
+            break;
+        case 38: //Up
+            break;
+        case 39: //Right
+            break;
+        case 40: //Down
+            break;
         case 65: //a
         case 97: //A
             scene.traverse(function (node){

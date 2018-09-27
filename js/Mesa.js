@@ -27,4 +27,5 @@ function createTable() {
     addTableLeg(table, -4, 0, -5);
     scene.add(table);
 
+    table_obj.push(table);
 }
