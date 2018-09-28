@@ -92,7 +92,6 @@ function createSeat(){
     addSeatWheels(downPart, -1.05, -1.80, -0.40);
     addSeatWheels(downPart, 1.05, -1.80, -0.40);
     addSeatWheels(downPart, 1.05, -1.80, -0.40);
-    
 
 
     scene.add(topPart);
