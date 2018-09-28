@@ -1,32 +1,57 @@
 function addSeatWheelSuport(obj, x, y, z, axis, degree){
-    geometry = new THREE.CylinderGeometry(0.1, 0.1, 1, 8);
-    
+    geometry = new THREE.CylinderGeometry(0.10, 0.10, 1, 8);    
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     
     if(axis == 'x')
         mesh.rotateX(Math.PI / 2); //Rotating mesh by 90 degree in X axis. 
-    if(axis == 'z')  
+    else if(axis == 'z')  
         mesh.rotateZ(Math.PI / 2); //Rotating mesh by 90 degree in Y axis. 
 
     if (degree == 1)
         mesh.rotateX(-0.40);
     else if (degree == 2)
         mesh.rotateX(0.40);
+    else if (degree == 3)
+        mesh.rotateZ(0.70);
+    else if (degree == 4)
+        mesh.rotateZ(-0.70);
 
     obj.add(mesh);
 }
 
-function addSeatLiftCylinder(obj, x, y, z){
-    geometry = new THREE.CylinderGeometry(0.15, 0.15, 1.5, 10);
+function addSeatWheels(obj, x, y, z){
+    geometry = new THREE.TorusGeometry(0.10, 0.10, 10, 20);
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+    mesh.rotateY(Math.PI / 2);
+    obj.add(mesh);
+}
+
+function addSeatLiftCylinderBase(obj, x, y, z){
+    geometry = new THREE.CylinderGeometry(0.30, 0.30, 0.20, 10);
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
 
     obj.add(mesh);
 }
 
+function addSeatLiftCylinder(obj, x, y, z){
+    geometry = new THREE.CylinderGeometry(0.15, 0.15, 1.50, 10);
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+
+    obj.add(mesh);
+}
+
+function addSeatArms(obj, x, y, z){
+    geometry = new THREE.TorusGeometry(0.10, 0.10, 10, 20);
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+}
+
 function addSeatBack(obj, x, y, z){
-    geometry = new THREE.CubeGeometry(3, 3.5, 0.1);
+    geometry = new THREE.CubeGeometry(3, 3.50, 0.10);
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     mesh.rotateX(Math.PI/20);
@@ -35,7 +60,7 @@ function addSeatBack(obj, x, y, z){
 }
 
 function addSeatBase(obj, x, y, z){
-    geometry = new THREE.CubeGeometry(3, 0.1, 3);
+    geometry = new THREE.CubeGeometry(3, 0.10, 3);
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
 
@@ -44,21 +69,31 @@ function addSeatBase(obj, x, y, z){
 
 function createSeat(){
 
-    //var seat = new THREE.Object3D();
-
     var topPart = new THREE.Object3D();
     var downPart = new THREE.Object3D();
     
     material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
 
+    //top part of the chair (back, base seat and arms)
     addSeatBase(topPart, 0, 0, 0);
-    addSeatBack(topPart, 0, 1.70, 1.72);//1.45, 1.8
+    addSeatBack(topPart, 0, 1.70, 1.72);
+
+    //down part of the chair (legs and wheels)
     addSeatLiftCylinder(downPart, 0, -0.75, 0);
-    addSeatWheelSuport(downPart, 0, -1.40, -0.60, 'x', 0);
-    addSeatWheelSuport(downPart, -0.53, -1.40, -0.18, 'z', 1);
-    addSeatWheelSuport(downPart, 0, -1.40, 0.60, 'x', 0);
-    addSeatWheelSuport(downPart, 0.53, -1.40, -0.18, 'z', 2);
-    //addSeatWheelSuport(downPart, 0.60, -1.40, 0, 'z', 0);
+    addSeatLiftCylinderBase(downPart, 0, -1.50, 0);
+    addSeatWheelSuport(downPart, 0, -1.50, -0.70, 'x', 0);
+    addSeatWheelSuport(downPart, -0.65, -1.50, -0.25, 'z', 1);
+    addSeatWheelSuport(downPart, -0.45, -1.50, 0.55, 'x', 3);
+    addSeatWheelSuport(downPart, 0.65, -1.50, -0.25, 'z', 2);
+    addSeatWheelSuport(downPart, 0.45, -1.50, 0.55, 'x', 4);
+    addSeatWheels(downPart, 0.70, -1.80, 0.85);
+    addSeatWheels(downPart, -0.70, -1.80, 0.85);
+    addSeatWheels(downPart, 0, -1.80, -1.10);
+    addSeatWheels(downPart, -1.05, -1.80, -0.40);
+    addSeatWheels(downPart, 1.05, -1.80, -0.40);
+    addSeatWheels(downPart, 1.05, -1.80, -0.40);
+    
+
 
     scene.add(topPart);
     scene.add(downPart);
