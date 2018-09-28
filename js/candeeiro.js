@@ -1,4 +1,4 @@
-function addTopLamp(obj, x, y, z){
+function addTopLampCylinder(obj, x, y, z){
 	geometry = new THREE.CylinderGeometry(0.2, 1.6, 1, 32);
 	mesh = new THREE.Mesh(geometry, material);
 	mesh.position.set(x, y, z);
@@ -6,8 +6,16 @@ function addTopLamp(obj, x, y, z){
 	obj.add(mesh);
 }
 
+function addTopLamp(obj, x, y, z){
+	geometry = new THREE.ConeGeometry(1.6, 1, 32);
+	mesh = new THREE.Mesh(geometry, material);
+	mesh.position.set(x,y,z);
+
+	obj.add(mesh);
+}
+
 function addLampPoll(obj, x, y, z){
-	geometry = new THREE.CylinderGeometry(0.1, 0.1, 7.3, 32);
+	geometry = new THREE.CylinderGeometry(0.1, 0.1, 6.25, 32);
 	mesh = new THREE.Mesh(geometry, material);
 	mesh.position.set(x, y , z);
 
@@ -65,8 +73,8 @@ function createLamp(){
 
 	material = new THREE.MeshBasicMaterial({color: 0xFFFF33	, wireframe: true});
 
-	addBottomLamp(bottom, 6, -1.40 , 0);
-	addLampPoll(poll, 6, 1.5, 0);
+	addBottomLamp(bottom, 6, -1.25, 0);
+	addLampPoll(poll, 6, 2.25, 0);
 	addTopLamp(top, 6, 5.5, 0);
 	addTopSwitchLamp(topSwit, 5.55, 3.95, 0);
 	addBottomSwitchLamp(bottomSwit, 5.55, 4.15, 0);
@@ -80,4 +88,12 @@ function createLamp(){
 	scene.add(bottomSwit);
 	scene.add(pushSwit);
 	scene.add(bulb);
+
+	lamp_obj.push(bottom);
+	lamp_obj.push(poll);
+	lamp_obj.push(top);
+	lamp_obj.push(topSwit);
+	lamp_obj.push(bottomSwit);
+	lamp_obj.push(pushSwit);
+	lamp_obj.push(bulb);
 }
