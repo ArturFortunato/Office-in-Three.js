@@ -19,12 +19,12 @@ function createTable() {
 
     material = new THREE.MeshBasicMaterial({color: 0x825201, wireframe: true});
 
-    addTableTop(table, 0, 1.75, -3);
+    addTableTop(table, 0, 1.25, -3);
 
-    addTableLeg(table, 4, 0, -1);
-    addTableLeg(table, -4, 0, -1);
-    addTableLeg(table, 4, 0, -5);
-    addTableLeg(table, -4, 0, -5);
+    addTableLeg(table, 4, -0.5, -1);
+    addTableLeg(table, -4, -0.5, -1);
+    addTableLeg(table, 4, -0.5, -5);
+    addTableLeg(table, -4, -0.5, -5);
     scene.add(table);
 
 }
