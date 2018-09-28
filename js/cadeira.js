@@ -1,3 +1,5 @@
+var topPart, downPart;
+
 function addSeatWheelSuport(obj, x, y, z, axis, degree){
     geometry = new THREE.CylinderGeometry(0.10, 0.10, 1, 8);    
     mesh = new THREE.Mesh(geometry, material);
@@ -44,10 +46,25 @@ function addSeatLiftCylinder(obj, x, y, z){
     obj.add(mesh);
 }
 
-function addSeatArms(obj, x, y, z){
-    geometry = new THREE.TorusGeometry(0.10, 0.10, 10, 20);
+//Creates the horizontal arm support
+function addSeatArms_1(obj, x, y, z){
+    geometry = new THREE.CubeGeometry(1.8, 0.15, 0.20);
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
+    mesh.rotateY(Math.PI/2);
+    mesh.rotateZ(Math.PI/50);
+    
+    obj.add(mesh);
+}
+
+//Creates the vertical arm support
+function addSeatArms_2(obj, x, y, z){
+    geometry = new THREE.CubeGeometry(0.85, 0.20, 0.20);
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+    mesh.rotateZ(Math.PI/2);
+    
+    obj.add(mesh);
 }
 
 function addSeatBack(obj, x, y, z){
@@ -69,14 +86,18 @@ function addSeatBase(obj, x, y, z){
 
 function createSeat(){
 
-    var topPart = new THREE.Object3D();
-    var downPart = new THREE.Object3D();
+    topPart = new THREE.Object3D();
+    downPart = new THREE.Object3D();
     
-    material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
+    material = new THREE.MeshBasicMaterial({color: 0xeee8aa, wireframe: true});
 
     //top part of the chair (back, base seat and arms)
     addSeatBase(topPart, 0, 0, 0);
     addSeatBack(topPart, 0, 1.70, 1.72);
+    addSeatArms_1(topPart, -1.60, 0.80, 0.70); //Horizontal arm support
+    addSeatArms_2(topPart, -1.60, 0.38, -0.10); //Vertical arm support
+    addSeatArms_1(topPart, 1.60, 0.80, 0.70); //Horizontal arm support
+    addSeatArms_2(topPart, 1.60, 0.38, -0.10); //Vertical arm support
 
     //down part of the chair (legs and wheels)
     addSeatLiftCylinder(downPart, 0, -0.75, 0);
