@@ -113,10 +113,13 @@ function createSeat(){
     addSeatWheels(downPart, -1.05, -1.80, -0.40);
     addSeatWheels(downPart, 1.05, -1.80, -0.40);
     addSeatWheels(downPart, 1.05, -1.80, -0.40);
-    
 
 
     scene.add(topPart);
+    scene.updateMatrixWorld(true);
     scene.add(downPart);
+    scene.updateMatrixWorld(true);
     
+    chair_obj.push(topPart);
+    chair_obj.push(downPart);
 }

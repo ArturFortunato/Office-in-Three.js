@@ -1,6 +1,14 @@
 var camera, scene, render;
 var geometry, material, mesh;
 var controls;
+var chair_obj = [];
+var table_obj = [];
+var lamp_obj = [];
+var acceleration = 1.2;
+var velocity = 0.01;
+var chair_pos = new THREE.Vector3();
+var clock = new THREE.Clock();
+var delta = 0;
 
 function addPlane(){
     var geometry = new THREE.PlaneGeometry( 20, 20 , 20 );
@@ -58,6 +66,21 @@ function onKeyDown(event){
     var code = event.keyCode;
 
     switch(code){
+        case 16: //Left
+            delta = clock.getDelta();
+            chair_pos.addScalar(velocity*delta + 0.5*acceleration*delta*delta);
+            for(var i = 0; i < chair_obj.length; i++){
+                chair_obj[i].translateX(-(velocity*delta + 0.5*acceleration*delta*delta));
+                console.log(chair_pos.x + ',' + chair_pos.y + ',' + chair_pos.z);
+            }
+            delta = 0;
+            break;
+        case 38: //Up
+            break;
+        case 39: //Right
+            break;
+        case 40: //Down
+            break;
         case 65: //a
         case 97: //A
             scene.traverse(function (node){
