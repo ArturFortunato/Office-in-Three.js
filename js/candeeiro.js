@@ -73,7 +73,7 @@ function createLamp(){
 
 	material = new THREE.MeshBasicMaterial({color: 0xFFFF33	, wireframe: true});
 
-	addBottomLamp(bottom, 6, -0.10, 0);
+	addBottomLamp(bottom, 6, -1.25, 0);
 	addLampPoll(poll, 6, 2.25, 0);
 	addTopLamp(top, 6, 5.5, 0);
 	addTopSwitchLamp(topSwit, 5.55, 3.95, 0);

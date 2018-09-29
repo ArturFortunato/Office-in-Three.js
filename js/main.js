@@ -1,6 +1,7 @@
 var camera, scene, render;
 var geometry, material, mesh;
 var controls;
+var currentCamera = 1;
 var chair_obj = [];
 var table_obj = [];
 var lamp_obj = [];
@@ -30,7 +31,7 @@ function animate(){
 function createScene(){
 
     scene = new THREE.Scene();
-    scene.add(new THREE.AxesHelper(1));
+    scene.add(new THREE.AxesHelper(10));
 
     addPlane();
     createSeat();
@@ -40,7 +41,7 @@ function createScene(){
 
 function createCamera(){
 
-    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.3, 1000);
 
     camera.position.x = 8;
     camera.position.y = 8;
@@ -88,6 +89,24 @@ function onKeyDown(event){
                     node.material.wireframe = !node.material.wireframe;
                 }
             });
+            break;
+        case 49: //1
+            camera.position.x = 8;
+            camera.position.y = 8;
+            camera.position.z = 8;
+            camera.lookAt(scene.position);
+            break;
+        case 50: //2
+            camera.position.x = 0;
+            camera.position.y = 2;
+            camera.position.z = -12;
+            camera.lookAt(scene.position);
+            break;
+        case 51: //3   
+            camera.position.x = -10;
+            camera.position.y = 2;
+            camera.position.z = 0;
+            camera.lookAt(scene.position);
             break;
         default: break;
     }
