@@ -48,8 +48,9 @@ function createScene(){
 function createCamera(){
     var width = window.innerWidth;
     var height = window.innerHeight;
-    //camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.3, 1000);
+    
     camera = new THREE.OrthographicCamera( width / (-100), width / 100, height / 100, height / (-100), -100, 100 );
+    
     camera.position.x = 0;
     camera.position.y = 0;
     camera.position.z = -12;
