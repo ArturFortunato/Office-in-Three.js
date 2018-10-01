@@ -46,12 +46,13 @@ function createScene(){
 }
 
 function createCamera(){
-
-    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.3, 1000);
-
-    camera.position.x = 8;
-    camera.position.y = 8;
-    camera.position.z = 8;
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    //camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.3, 1000);
+    camera = new THREE.OrthographicCamera( width / (-100), width / 100, height / 100, height / (-100), -100, 100 );
+    camera.position.x = 0;
+    camera.position.y = 0;
+    camera.position.z = -12;
     camera.lookAt(scene.position);  
 }
 
@@ -137,20 +138,20 @@ function onKeyDown(event){
                 });
                 break;
             case 49: //1
-                camera.position.x = 8;
-                camera.position.y = 8;
-                camera.position.z = 8;
+                camera.position.x = 0;
+                camera.position.y = 12;
+                camera.position.z = 0;
                 camera.lookAt(scene.position);
                 break;
             case 50: //2
                 camera.position.x = 0;
-                camera.position.y = 2;
+                camera.position.y = 0;
                 camera.position.z = -12;
                 camera.lookAt(scene.position);
                 break;
             case 51: //3   
                 camera.position.x = -10;
-                camera.position.y = 2;
+                camera.position.y = 0;
                 camera.position.z = 0;
                 camera.lookAt(scene.position);
                 break;
