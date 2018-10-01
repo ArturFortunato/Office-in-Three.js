@@ -79,8 +79,7 @@ function refreshChairPosition() {
 
 function rotateChair() { //Direction: 1 --> clockwise; -1 --> counter-clockwise
     delta = clock.getDelta();
-    for(var i = 0; i < chair_obj.length; i++)
-        chair_obj[i].rotateOnAxis(axis, rotate_bool * direction * Math.PI / 180);
+    chair_obj[0].rotateOnAxis(axis, rotate_bool * direction * Math.PI / 180);
 }
 
 function translateChair() {
@@ -93,6 +92,8 @@ function translateChair() {
     }
     else if (Math.abs(velocity) >= VELOCITY_MAX)
         acceleration = 0;
+    chair_obj[1].setRotationFromMatrix(chair_obj[0].matrixWorld);
+    chair_obj[2].setRotationFromMatrix(chair_obj[0].matrixWorld);
     for(var i = 0; i < chair_obj.length; i++){
         chair_obj[i].translateZ(velocity * delta + 0.5 * acceleration * delta * delta);
     }
