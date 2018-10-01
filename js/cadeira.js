@@ -5,18 +5,18 @@ function addSeatWheelSuport(obj, x, y, z, axis, degree){
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     
-    if(axis == 'x')
+    if(axis === 'x')
         mesh.rotateX(Math.PI / 2); //Rotating mesh by 90 degree in X axis. 
-    else if(axis == 'z')  
+    else if(axis === 'z')  
         mesh.rotateZ(Math.PI / 2); //Rotating mesh by 90 degree in Y axis. 
 
-    if (degree == 1)
+    if (degree === 1)
         mesh.rotateX(-0.40);
-    else if (degree == 2)
+    else if (degree === 2)
         mesh.rotateX(0.40);
-    else if (degree == 3)
+    else if (degree === 3)
         mesh.rotateZ(0.70);
-    else if (degree == 4)
+    else if (degree === 4)
         mesh.rotateZ(-0.70);
 
     obj.add(mesh);
