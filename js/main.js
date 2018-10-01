@@ -86,7 +86,10 @@ function rotateChair() { //Direction: 1 --> clockwise; -1 --> counter-clockwise
 }
 
 function rotateWheels() {
-    chair.children[1].setRotationFromMatrix(chair.children[0].matrixWorld);
+    angle = (new THREE.Vector3(chair.children[0].matrixWorld.elements[2], 0, chair.children[0].matrixWorld.elements[0])).angleTo(new THREE.Vector3(chair.children[2].matrixWorld.elements[2], 0, chair.children[2].matrixWorld.elements[0]));
+    console.log(angle);
+    for(i = 0; i < 6; i++)
+        chair.children[2].children[i].setRotationFromAxisAngle(new THREE.Vector3(0, 1, 0), (Math.PI / 2) - angle);
     rotate_wheels = false;
 }
 
@@ -100,7 +103,10 @@ function translateChair() {
     }
     else if (Math.abs(velocity) >= VELOCITY_MAX)
         acceleration = 0;
-    chair.translateZ(velocity * delta + 0.5 * acceleration * delta * delta);
+    //chair.translateZ(velocity * delta + 0.5 * acceleration * delta * delta);
+    //chair.translateX(velocity * delta + 0.5 * acceleration * delta * delta);
+    
+    chair.translateOnAxis(new THREE.Vector3(chair.children[0].matrixWorld.elements[8], 0, chair.children[0].matrixWorld.elements[0]), velocity * delta + 0.5 * acceleration * delta * delta);
 }
 
 function onKeyDown(event){
