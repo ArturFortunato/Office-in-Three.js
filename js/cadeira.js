@@ -88,7 +88,8 @@ function createSeat(){
 
     topPart = new THREE.Object3D();
     downPart = new THREE.Object3D();
-    
+    wheels = new THREE.Object3D();
+
     material = new THREE.MeshBasicMaterial({color: 0xeee8aa, wireframe: true});
 
     //top part of the chair (back, base seat and arms)
@@ -107,19 +108,22 @@ function createSeat(){
     addSeatWheelSuport(downPart, -0.45, -1.50, 0.55, 'x', 3);
     addSeatWheelSuport(downPart, 0.65, -1.50, -0.25, 'z', 2);
     addSeatWheelSuport(downPart, 0.45, -1.50, 0.55, 'x', 4);
-    addSeatWheels(downPart, 0.70, -1.80, 0.85);
-    addSeatWheels(downPart, -0.70, -1.80, 0.85);
-    addSeatWheels(downPart, 0, -1.80, -1.10);
-    addSeatWheels(downPart, -1.05, -1.80, -0.40);
-    addSeatWheels(downPart, 1.05, -1.80, -0.40);
-    addSeatWheels(downPart, 1.05, -1.80, -0.40);
+    addSeatWheels(wheels, 0.70, -1.80, 0.85);
+    addSeatWheels(wheels, -0.70, -1.80, 0.85);
+    addSeatWheels(wheels, 0, -1.80, -1.10);
+    addSeatWheels(wheels, -1.05, -1.80, -0.40);
+    addSeatWheels(wheels, 1.05, -1.80, -0.40);
+    addSeatWheels(wheels, 1.05, -1.80, -0.40);
 
 
     scene.add(topPart);
     scene.updateMatrixWorld(true);
     scene.add(downPart);
     scene.updateMatrixWorld(true);
+    scene.add(wheels);
+    scene.updateMatrixWorld(true);
     
     chair_obj.push(topPart);
     chair_obj.push(downPart);
+    chair_obj.push(wheels);
 }
