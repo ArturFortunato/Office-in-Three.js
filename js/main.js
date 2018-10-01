@@ -13,6 +13,9 @@ var VELOCITY_MAX = 15;
 var axis = new THREE.Vector3(0, 1, 0);
 var rotate_bool = 0;
 var direction = 1;
+var fez_coisas_com_73;
+var fez_coisas_com_75;
+var canIrefreshMesh = false;
 
 function addPlane(){
     var geometry = new THREE.PlaneGeometry( 20, 20 , 20 );
@@ -68,8 +71,10 @@ function onResize(){
 }
 
 function refreshChairPosition() {
-    rotateChair();
-    translateChair();
+    if(rotate_bool)
+        rotateChair();
+    else
+        translateChair();
 }
 
 function rotateChair() { //Direction: 1 --> clockwise; -1 --> counter-clockwise
@@ -80,88 +85,101 @@ function rotateChair() { //Direction: 1 --> clockwise; -1 --> counter-clockwise
 
 function translateChair() {
     delta = clock.getDelta();
+    previous_velocity = velocity;
     velocity += acceleration * delta;
-    if (velocity <= 0 || velocity == VELOCITY_MAX) {
-        acceleration = 0;
+    if (velocity * previous_velocity < 0) {
         velocity = 0;
+        acceleration = 0;
     }
-    for(var i = 0; i < chair_obj.length; i++)
-        chair_obj[i].translateZ(-(velocity * delta + 0.5 * acceleration * delta * delta));
+    else if (Math.abs(velocity) >= VELOCITY_MAX)
+        acceleration = 0;
+    for(var i = 0; i < chair_obj.length; i++){
+        chair_obj[i].translateZ(velocity * delta + 0.5 * acceleration * delta * delta);
+    }
 }
 
 function onKeyDown(event){
     var code = event.keyCode;
-
-    switch(code){
-        case 74: //Left
-            if(acceleration === 0) {
-                rotate_bool = 1;
-                direction = 1;
-            }
-            break;
-        case 73: //Up
-            if(rotate_bool === 0) {
-                acceleration = 5; 
-                translate = true;  
-            }
-            break;
-        case 76: //Right
-            if(acceleration === 0) {
-                rotate_bool = 1;
-                direction = -1;
-            }
-            break;
-        case 75: //Down
-            if(rotate_bool === 0) {
-                acceleration = -5;
-                translate = true;
-            }
-            break;
-        case 65: //a
-        case 97: //A
-            scene.traverse(function (node){
-                if(node instanceof THREE.Mesh){
-                    node.material.wireframe = !node.material.wireframe;
+    if(event.type === "keydown") {
+        switch(code){
+            case 74: //Left
+                if(acceleration === 0) {
+                    rotate_bool = 1;
+                    direction = 1;
                 }
-            });
-            break;
-        case 49: //1
-            camera.position.x = 8;
-            camera.position.y = 8;
-            camera.position.z = 8;
-            camera.lookAt(scene.position);
-            break;
-        case 50: //2
-            camera.position.x = 0;
-            camera.position.y = 2;
-            camera.position.z = -12;
-            camera.lookAt(scene.position);
-            break;
-        case 51: //3   
-            camera.position.x = -10;
-            camera.position.y = 2;
-            camera.position.z = 0;
-            camera.lookAt(scene.position);
-            break;
-        default: break;
+                break;
+            case 73: //Up
+                if(rotate_bool === 0 && acceleration === 0 && velocity === 0) {
+                    fez_coisas_com_73 = true;
+                    acceleration = -5; 
+                    translate = true;  
+                }
+                break;
+            case 76: //Right
+                if(acceleration === 0) {
+                    rotate_bool = 1;
+                    direction = -1;
+                }
+                break;
+            case 75: //Down
+                if(rotate_bool === 0 && acceleration === 0 && velocity === 0) {
+                    fez_coisas_com_75 = true;
+                    acceleration = 5;
+                    translate = true;
+                }
+                break;
+            case 65: //a ou A
+                scene.traverse(function (node){
+                    if(node instanceof THREE.Mesh){
+                        node.material.wireframe = !node.material.wireframe;
+                    }
+                });
+                break;
+            case 49: //1
+                camera.position.x = 8;
+                camera.position.y = 8;
+                camera.position.z = 8;
+                camera.lookAt(scene.position);
+                break;
+            case 50: //2
+                camera.position.x = 0;
+                camera.position.y = 2;
+                camera.position.z = -12;
+                camera.lookAt(scene.position);
+                break;
+            case 51: //3   
+                camera.position.x = -10;
+                camera.position.y = 2;
+                camera.position.z = 0;
+                camera.lookAt(scene.position);
+                break;
+            default:
+                break;
+        }
     }
-
     render();
 }
 
 function onKeyUp(event) {
     switch(event.keyCode) {
-        case 73:
-            acceleration = -5;
+        case 73: //UP
+            if(fez_coisas_com_73) {
+                fez_coisas_com_73 = false;
+                acceleration = 5;
+            }
             translate = false;
             break;
-        case 74:
+        case 74: //LEFT
             rotate_bool = 0;
             break;
-        case 75:
+        case 75: //DOWN
+            if(fez_coisas_com_75) {
+                fez_coisas_com_75 = false;
+                acceleration = -5;
+            }
             translate = false;
             break;
-        case 76:
+        case 76: //RIGHT
             rotate_bool = 0;
             break;
     }
