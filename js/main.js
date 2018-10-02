@@ -2,7 +2,6 @@ var camera, scene, render;
 var geometry, material, mesh;
 var controls;
 var currentCamera = 1;
-var chair_obj = [];
 var table_obj = [];
 var lamp_obj = [];
 var acceleration = 0;
@@ -16,6 +15,8 @@ var direction = 1;
 var fez_coisas_com_73;
 var fez_coisas_com_75;
 var canIrefreshMesh = false;
+var rotate_wheels = false;
+var chair = new THREE.Object3D();
 
 function addPlane(){
     var geometry = new THREE.PlaneGeometry( 20, 20 , 20 );
@@ -73,6 +74,8 @@ function onResize(){
 }
 
 function refreshChairPosition() {
+    if(rotate_wheels)
+        rotateWheels()
     if(rotate_bool)
         rotateChair();
     else
@@ -81,7 +84,18 @@ function refreshChairPosition() {
 
 function rotateChair() { //Direction: 1 --> clockwise; -1 --> counter-clockwise
     delta = clock.getDelta();
-    chair_obj[0].rotateOnAxis(axis, rotate_bool * direction * Math.PI / 180);
+    chair.children[0].rotateOnAxis(axis, rotate_bool * direction * Math.PI / 180);
+    rotate_Wheels = true;
+}
+
+function rotateWheels() {
+    angle = (new THREE.Vector3(chair.children[0].matrixWorld.elements[2], 0, chair.children[0].matrixWorld.elements[0])).angleTo(new THREE.Vector3(chair.children[2].matrixWorld.elements[2], 0, chair.children[2].matrixWorld.elements[0]));
+    console.log(angle);
+    if(chair.children[0].matrixWorld.elements[2]*chair.children[2].matrixWorld.elements[0] - chair.children[0].matrixWorld.elements[0]*chair.children[2].matrixWorld.elements[2] < 0)
+        angle = -angle;
+    for(i = 0; i < 6; i++)
+        chair.children[2].children[i].setRotationFromAxisAngle(new THREE.Vector3(0, 1, 0), (Math.PI /2) - angle);
+    rotate_wheels = false;
 }
 
 function translateChair() {
@@ -94,11 +108,10 @@ function translateChair() {
     }
     else if (Math.abs(velocity) >= VELOCITY_MAX)
         acceleration = 0;
-    chair_obj[1].setRotationFromMatrix(chair_obj[0].matrixWorld);
-    chair_obj[2].setRotationFromMatrix(chair_obj[0].matrixWorld);
-    for(var i = 0; i < chair_obj.length; i++){
-        chair_obj[i].translateZ(velocity * delta + 0.5 * acceleration * delta * delta);
-    }
+    //chair.translateZ(velocity * delta + 0.5 * acceleration * delta * delta);
+    //chair.translateX(velocity * delta + 0.5 * acceleration * delta * delta);
+    
+    chair.translateOnAxis(new THREE.Vector3(chair.children[0].matrixWorld.elements[8], 0, chair.children[0].matrixWorld.elements[0]), velocity * delta + 0.5 * acceleration * delta * delta);
 }
 
 function onKeyDown(event){
@@ -115,7 +128,8 @@ function onKeyDown(event){
                 if(rotate_bool === 0 && acceleration === 0 && velocity === 0) {
                     fez_coisas_com_73 = true;
                     acceleration = -5; 
-                    translate = true;  
+                    translate = true; 
+                    rotate_wheels = true; 
                 }
                 break;
             case 76: //Right
@@ -129,6 +143,7 @@ function onKeyDown(event){
                     fez_coisas_com_75 = true;
                     acceleration = 5;
                     translate = true;
+                    rotate_wheels = true;
                 }
                 break;
             case 65: //a ou A
