@@ -83,13 +83,16 @@ function refreshChairPosition() {
 function rotateChair() { //Direction: 1 --> clockwise; -1 --> counter-clockwise
     delta = clock.getDelta();
     chair.children[0].rotateOnAxis(axis, rotate_bool * direction * Math.PI / 180);
+    rotate_Wheels = true;
 }
 
 function rotateWheels() {
     angle = (new THREE.Vector3(chair.children[0].matrixWorld.elements[2], 0, chair.children[0].matrixWorld.elements[0])).angleTo(new THREE.Vector3(chair.children[2].matrixWorld.elements[2], 0, chair.children[2].matrixWorld.elements[0]));
     console.log(angle);
+    if(chair.children[0].matrixWorld.elements[2]*chair.children[2].matrixWorld.elements[0] - chair.children[0].matrixWorld.elements[0]*chair.children[2].matrixWorld.elements[2] < 0)
+        angle = -angle;
     for(i = 0; i < 6; i++)
-        chair.children[2].children[i].setRotationFromAxisAngle(new THREE.Vector3(0, 1, 0), (Math.PI / 2) - angle);
+        chair.children[2].children[i].setRotationFromAxisAngle(new THREE.Vector3(0, 1, 0), (Math.PI /2) - angle);
     rotate_wheels = false;
 }
 
