@@ -90,11 +90,13 @@ function rotateChair() { //Direction: 1 --> clockwise; -1 --> counter-clockwise
 
 function rotateWheels() {
     angle = (new THREE.Vector3(chair.children[0].matrixWorld.elements[2], 0, chair.children[0].matrixWorld.elements[0])).angleTo(new THREE.Vector3(chair.children[2].matrixWorld.elements[2], 0, chair.children[2].matrixWorld.elements[0]));
-    console.log(angle);
     if(chair.children[0].matrixWorld.elements[2]*chair.children[2].matrixWorld.elements[0] - chair.children[0].matrixWorld.elements[0]*chair.children[2].matrixWorld.elements[2] < 0)
         angle = -angle;
+    console.log("Angulo1:" + ((Math.PI / 2) - angle));
+    console.log("Agulo2:" + (Math.PI)/180);
+    console.log("ANGULO QUE RODA:" + (Math.PI/2 - Math.PI/180));
     for(i = 0; i < 6; i++)
-        chair.children[2].children[i].setRotationFromAxisAngle(new THREE.Vector3(0, 1, 0), (Math.PI /2) - angle);
+        chair.children[2].children[i].rotateOnAxis(new THREE.Vector3(0, 1, 0), direction * (Math.PI)/2);
     rotate_wheels = false;
 }
 
