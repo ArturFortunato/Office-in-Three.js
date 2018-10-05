@@ -2,8 +2,6 @@ var camera, scene, render;
 var geometry, material, mesh;
 var controls;
 var currentCamera = 1;
-var table_obj = [];
-var lamp_obj = [];
 var acceleration = 0;
 var velocity = 0;
 var clock = new THREE.Clock();
@@ -12,7 +10,7 @@ var VELOCITY_MAX = 15;
 var axis = new THREE.Vector3(0, 1, 0);
 var direction = 1;
 var rotate_wheels = false;
-var chair = new THREE.Object3D();
+var chair = new Chair();
 var angle = null;
 
 var up = false;
@@ -45,6 +43,7 @@ function createScene(){
     createSeat();
     createTable();
     createLamp();
+    scene.updateMatrixWorld(true);
 }
 
 function createCamera(){
@@ -60,7 +59,7 @@ function createCamera(){
 }
 
 function render(){
-    refreshChairPosition();
+    //refreshChairPosition();
     renderer.render(scene, camera);
 }
 
@@ -77,8 +76,8 @@ function onResize(){
 function refreshChairPosition() {
     delta = clock.getDelta();
     canTranslate = true;
-    if((up || down) && rotate_wheels)
-        canTranslate = rotateWheels();
+    /*if((up || down) && rotate_wheels)
+        canTranslate = rotateWheels();*/
     if (left || right)
         rotateChair();
     else if(canTranslate)
@@ -86,17 +85,16 @@ function refreshChairPosition() {
 }
 
 function rotateChair() { //Direction: 1 --> clockwise; -1 --> counter-clockwise
-    chair.children[0].rotateOnAxis(axis, direction * Math.PI / 180);
+    chair.topPart.rotateOnAxis(axis, direction * Math.PI / 180);
     rotate_wheels = true;
 }
 
 function rotateWheels() {
     if(angle === null) {
-        angle = (new THREE.Vector3(chair.children[0].matrixWorld.elements[2], 0, chair.children[0].matrixWorld.elements[0])).angleTo(new THREE.Vector3(chair.children[2].matrixWorld.elements[2], 0, chair.children[2].matrixWorld.elements[0]));    
+        angle = (new THREE.Vector3(chair.topPart.matrixWorld.elements[2], 0, chair.topPart.matrixWorld.elements[0])).angleTo(new THREE.Vector3(chair.wheels.matrixWorld.elements[2], 0, chair.wheels.matrixWorld.elements[0]));    
     }
-    for(i = 0; i < 6; i++) {
+    for(i = 0; i < 6; i++)
         chair.children[2].children[i].rotateOnAxis(new THREE.Vector3(0, 1, 0), direction * Math.PI / 10);
-    }
     angle -= (angle > 0) ? (Math.PI / 10) : - (Math.PI / 10);
     if(angle <= 0) {
         rotate_wheels = false;
@@ -112,14 +110,12 @@ function translateChair() {
     if (velocity * previous_velocity < 0) {
         velocity = 0;
         acceleration = 0;
-        up = false;
-        down = false;
     }
     else if (Math.abs(velocity) >= VELOCITY_MAX) {
 
         acceleration = 0;
-    }   
-    chair.translateOnAxis(new THREE.Vector3(chair.children[0].matrixWorld.elements[8], 0, chair.children[0].matrixWorld.elements[0]), velocity * delta + 0.5 * acceleration * delta * delta);
+    }  
+    chair.translateOnAxis(new THREE.Vector3(chair.topPart.matrixWorld.elements[8], 0, chair.topPart.matrixWorld.elements[0]), velocity * delta + 0.5 * acceleration * delta * delta);
 }
 
 function onKeyDown(event) {
@@ -230,7 +226,6 @@ function onKeyUp(event){
 }
 
 function init(){
-
     renderer = new THREE.WebGLRenderer();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
