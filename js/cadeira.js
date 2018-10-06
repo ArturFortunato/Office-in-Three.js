@@ -1,124 +1,64 @@
-var topPart, downPart;
+var material;
 
-function addSeatWheelSuport(obj, x, y, z, axis, degree){
-    geometry = new THREE.CylinderGeometry(0.10, 0.10, 1, 8);    
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-    
-    if(axis === 'x')
-        mesh.rotateX(Math.PI / 2); //Rotating mesh by 90 degree in X axis. 
-    else if(axis === 'z')  
-        mesh.rotateZ(Math.PI / 2); //Rotating mesh by 90 degree in Y axis. 
+class Chair extends Objeto {
 
-    if (degree === 1)
-        mesh.rotateX(-0.40);
-    else if (degree === 2)
-        mesh.rotateX(0.40);
-    else if (degree === 3)
-        mesh.rotateZ(0.70);
-    else if (degree === 4)
-        mesh.rotateZ(-0.70);
-
-    obj.add(mesh);
-}
-
-function addSeatWheels(obj, x, y, z){
-    geometry = new THREE.TorusGeometry(0.10, 0.10, 10, 20);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-    mesh.rotateY(Math.PI / 2);
-    obj.add(mesh);
-}
-
-function addSeatLiftCylinderBase(obj, x, y, z){
-    geometry = new THREE.CylinderGeometry(0.30, 0.30, 0.20, 10);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-
-    obj.add(mesh);
-}
-
-function addSeatLiftCylinder(obj, x, y, z){
-    geometry = new THREE.CylinderGeometry(0.15, 0.15, 1.50, 10);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-
-    obj.add(mesh);
-}
-
-//Creates the horizontal arm support
-function addSeatArms_1(obj, x, y, z){
-    geometry = new THREE.CubeGeometry(1.8, 0.15, 0.20);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-    mesh.rotateY(Math.PI/2);
-    mesh.rotateZ(Math.PI/50);
-    
-    obj.add(mesh);
-}
-
-//Creates the vertical arm support
-function addSeatArms_2(obj, x, y, z){
-    geometry = new THREE.CubeGeometry(0.85, 0.20, 0.20);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-    mesh.rotateZ(Math.PI/2);
-    
-    obj.add(mesh);
-}
-
-function addSeatBack(obj, x, y, z){
-    geometry = new THREE.CubeGeometry(3, 3.50, 0.10);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-    mesh.rotateX(Math.PI/20);
-
-    obj.add(mesh);
-}
-
-function addSeatBase(obj, x, y, z){
-    geometry = new THREE.CubeGeometry(3, 0.10, 3);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-
-    obj.add(mesh);
+    constructor() {
+        super();
+    }
 }
 
 function createSeat(){
-
-    topPart = new THREE.Object3D();
-    downPart = new THREE.Object3D();
-    wheels = new THREE.Object3D();
+    
+    var topPart = new Objeto();
+    var downPart = new Objeto();
+    var wheels = new Objeto();
 
     material = new THREE.MeshBasicMaterial({color: 0xeee8aa, wireframe: true});
-
-    //top part of the chair (back, base seat and arms)
-    addSeatBase(topPart, 0, 0, 0);
-    addSeatBack(topPart, 0, 1.70, 1.72);
-    addSeatArms_1(topPart, -1.60, 0.80, 0.70); //Horizontal arm support
-    addSeatArms_2(topPart, -1.60, 0.38, -0.10); //Vertical arm support
-    addSeatArms_1(topPart, 1.60, 0.80, 0.70); //Horizontal arm support
-    addSeatArms_2(topPart, 1.60, 0.38, -0.10); //Vertical arm support
-
-    //down part of the chair (legs and wheels)
-    addSeatLiftCylinder(downPart, 0, -0.75, 0);
-    addSeatLiftCylinderBase(downPart, 0, -1.50, 0);
-    addSeatWheelSuport(downPart, 0, -1.50, -0.70, 'x', 0);
-    addSeatWheelSuport(downPart, -0.65, -1.50, -0.25, 'z', 1);
-    addSeatWheelSuport(downPart, -0.45, -1.50, 0.55, 'x', 3);
-    addSeatWheelSuport(downPart, 0.65, -1.50, -0.25, 'z', 2);
-    addSeatWheelSuport(downPart, 0.45, -1.50, 0.55, 'x', 4);
-    addSeatWheels(wheels, 0.70, -1.80, 0.85);
-    addSeatWheels(wheels, -0.70, -1.80, 0.85);
-    addSeatWheels(wheels, 0, -1.80, -1.10);
-    addSeatWheels(wheels, -1.05, -1.80, -0.40);
-    addSeatWheels(wheels, 1.05, -1.80, -0.40);
-    addSeatWheels(wheels, 1.05, -1.80, -0.40);    
     
+    topPart.addElement(0, 0, 0, new THREE.CubeGeometry(3, 0.10, 3), 0, ''); //Assento
+    topPart.addElement(0, 1.70, 1.55, new THREE.CubeGeometry(3, 3.50, 0.10)); //Costas
+
+    topPart.addElement(-1.60, 0.80, 0.70, new THREE.CubeGeometry(0.2, 0.15, 1.8)); //Horizontal, braço esquerdo
+    topPart.addElement(-1.60, 0.38, -0.10, new THREE.CubeGeometry(0.2, 0.85, 0.2)); //Vertical, braço esquerdo
+    topPart.addElement(1.60, 0.80, 0.70, new THREE.CubeGeometry(0.2, 0.15, 1.8)); //Horizontal, braço direito
+    topPart.addElement(1.60, 0.38, -0.10, new THREE.CubeGeometry(0.2, 0.85, 0.2)); //Vertical, braço direito
+
+    downPart.addElement(0, -0.75, 0, new THREE.CylinderGeometry(0.15, 0.15, 1.50, 10));
+    downPart.addElement(0, -1.50, 0, new THREE.CylinderGeometry(0.30, 0.30, 0.20, 10));
+    downPart.addElement(0, -1.50, -0.70, new THREE.CylinderGeometry(0.10, 0.10, 1, 8));
+    downPart.addElement(-0.65, -1.50, -0.25, new THREE.CylinderGeometry(0.10, 0.10, 1, 8));
+    downPart.addElement(-0.45, -1.50, 0.55, new THREE.CylinderGeometry(0.10, 0.10, 1, 8));
+    downPart.addElement(0.65, -1.50, -0.25, new THREE.CylinderGeometry(0.10, 0.10, 1, 8));
+    downPart.addElement(0.45, -1.50, 0.55, new THREE.CylinderGeometry(0.10, 0.10, 1, 8));
+    
+    downPart.rotateMesh(downPart.children[2], Math.PI / 2, 'x');
+
+    downPart.rotateMesh(downPart.children[3],  2 * Math.PI / 5, 'y');
+    downPart.rotateMesh(downPart.children[3], Math.PI / 2 , 'x');
+
+    downPart.rotateMesh(downPart.children[4], 4 * Math.PI / 5, 'y');
+    downPart.rotateMesh(downPart.children[4], Math.PI / 2 , 'x');
+
+    downPart.rotateMesh(downPart.children[5], 8 * Math.PI / 5, 'y');
+    downPart.rotateMesh(downPart.children[5], Math.PI / 2 , 'x');
+
+    downPart.rotateMesh(downPart.children[6], 6 * Math.PI / 5, 'y');
+    downPart.rotateMesh(downPart.children[6], Math.PI / 2 , 'x');
+
+    wheels.addElement(0.70, -1.80, 0.85, new THREE.TorusGeometry(0.10, 0.10, 10, 20)); //Roda de trás, direita
+    wheels.addElement(-0.70, -1.80, 0.85, new THREE.TorusGeometry(0.10, 0.10, 10, 20)); //Roda de trás, esquerda
+    wheels.addElement(0, -1.80, -1.10, new THREE.TorusGeometry(0.10, 0.10, 10, 20)); //Roda da frente
+    wheels.addElement(-1.05, -1.80, -0.40, new THREE.TorusGeometry(0.10, 0.10, 10, 20)); //Roda da frente, esquerda
+    wheels.addElement(1.05, -1.80, -0.40, new THREE.TorusGeometry(0.10, 0.10, 10, 20)); // Roda da frente, direita
+    wheels.addElement(1.05, -1.80, -0.40, new THREE.TorusGeometry(0.10, 0.10, 10, 20));  //Roda da frente, direita
+
+    for(i = 0; i < 6; i++) {
+        wheels.rotateMesh(wheels.children[i], Math.PI / 2, 'y');
+        wheels.children[i].add( new THREE.AxesHelper( 1 ) ); 
+    }   
     chair.add(topPart);
     chair.add(downPart);
     chair.add(wheels);
 
     scene.add(chair);
-    scene.updateMatrixWorld(true);
 }

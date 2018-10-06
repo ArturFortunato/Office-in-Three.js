@@ -2,8 +2,6 @@ var camera, scene, render;
 var geometry, material, mesh;
 var controls;
 var currentCamera = 1;
-var table_obj = [];
-var lamp_obj = [];
 var acceleration = 0;
 var velocity = 0;
 var clock = new THREE.Clock();
@@ -11,9 +9,8 @@ var delta = 0;
 var VELOCITY_MAX = 15;
 var axis = new THREE.Vector3(0, 1, 0);
 var direction = 1;
-var rotate_wheels = false;
-var chair = new THREE.Object3D();
-var angle = null;
+var chair = new Chair();
+var angle = 0;
 
 var up = false;
 var down = false;
@@ -45,6 +42,7 @@ function createScene(){
     createSeat();
     createTable();
     createLamp();
+    scene.updateMatrixWorld(true);
 }
 
 function createCamera(){
@@ -77,7 +75,7 @@ function onResize(){
 function refreshChairPosition() {
     delta = clock.getDelta();
     canTranslate = true;
-    if((up || down) && rotate_wheels)
+    if((up || down) && angle != 0)
         canTranslate = rotateWheels();
     if (left || right)
         rotateChair();
@@ -87,20 +85,18 @@ function refreshChairPosition() {
 
 function rotateChair() { //Direction: 1 --> clockwise; -1 --> counter-clockwise
     chair.children[0].rotateOnAxis(axis, direction * Math.PI / 180);
-    rotate_wheels = true;
+    angle += direction * Math.PI / 180;
 }
 
 function rotateWheels() {
-    if(angle === null) {
-        angle = (new THREE.Vector3(chair.children[0].matrixWorld.elements[2], 0, chair.children[0].matrixWorld.elements[0])).angleTo(new THREE.Vector3(chair.children[2].matrixWorld.elements[2], 0, chair.children[2].matrixWorld.elements[0]));    
-    }
-    for(i = 0; i < 6; i++) {
-        chair.children[2].children[i].rotateOnAxis(new THREE.Vector3(0, 1, 0), direction * Math.PI / 10);
-    }
-    angle -= (angle > 0) ? (Math.PI / 10) : - (Math.PI / 10);
-    if(angle <= 0) {
-        rotate_wheels = false;
-        angle = null;
+    var positive = angle > 0 ? true : false;
+    for(i = 0; i < 6; i++)
+        chair.children[2].children[i].rotateOnAxis(new THREE.Vector3(0, 1, 0), (angle > 0 ? 1 : -1) * Math.PI / 20);
+
+    angle -= (positive ? 1 : -1) * (Math.PI / 20);
+
+    if((angle == 0) || (positive && angle < 0) || (!positive && angle > 0)) {
+        angle = 0;
         return true;
     }
     return false;
@@ -112,13 +108,10 @@ function translateChair() {
     if (velocity * previous_velocity < 0) {
         velocity = 0;
         acceleration = 0;
-        up = false;
-        down = false;
     }
     else if (Math.abs(velocity) >= VELOCITY_MAX) {
-
         acceleration = 0;
-    }   
+    }  
     chair.translateOnAxis(new THREE.Vector3(chair.children[0].matrixWorld.elements[8], 0, chair.children[0].matrixWorld.elements[0]), velocity * delta + 0.5 * acceleration * delta * delta);
 }
 
@@ -127,25 +120,25 @@ function onKeyDown(event) {
     if(event.type === "keydown") {
         switch(code) {
             case 73: //UP
-                if(!left && !down && !right) {
+                if(!left && !down && !right && (acceleration == 5 || acceleration == 0)) { //Impedir que o clique rapido para tras bloqueie a aceleracao em 5
                     acceleration = -5; 
                     up = true;
                 }
                 break;
             case 74: //LEFT
-                if(!up && !down && !right) {
+                if(!up && !down && !right && velocity == 0) { //Impede a rotaçao enquanto a cadeira anda 
                     direction = 1;
                     left = true;
                 }
                 break;
             case 75: //DOWN
-                if(!left && !up && !right) {
+                if(!left && !up && !right && (acceleration == -5 || acceleration == 0)) { //Impedir que o clique rapido para tras bloqueie a aceleracao em -5
                     acceleration = 5; 
                     down = true;
                 }
                 break;
             case 76: //RIGHT
-                if(!left && !down && !up) {
+                if(!left && !down && !up && velocity == 0) { //Impede a rotaçao enquanto a cadeira anda 
                     direction = -1; 
                     right = true;
                 }
@@ -184,28 +177,27 @@ function onKeyUp(event){
             });
             break;
         case 49: //1
-            camera.position.x = 8;
-            camera.position.y = 8;
-            camera.position.z = 8;
+            camera.position.x = 12;
+            camera.position.y = 0;
+            camera.position.z = 0;
             camera.lookAt(scene.position);
             break;
         case 50: //2
             camera.position.x = 0;
-            camera.position.y = 2;
-            camera.position.z = -12;
+            camera.position.y = 12;
+            camera.position.z = 0;
             camera.lookAt(scene.position);
             break;
         case 51: //3   
-            camera.position.x = -10;
-            camera.position.y = 2;
-            camera.position.z = 0;
+            camera.position.x = 0;
+            camera.position.y = 0;
+            camera.position.z = 12;
             camera.lookAt(scene.position);
             break;
     }
 }
 
 function init(){
-
     renderer = new THREE.WebGLRenderer();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
