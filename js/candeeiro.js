@@ -15,6 +15,5 @@ function createLamp(){
 	lamp.addElement(5.55, 2.85, 0, new THREE.CylinderGeometry(0.035, 0.035, 0.125, 32));
 	lamp.addElement(6, 5.3, 0, new THREE.SphereGeometry(0.2, 32, 32));
 
-	console.log(lamp);
 	scene.add(lamp);
 }
