@@ -119,25 +119,25 @@ function onKeyDown(event) {
     var code = event.keyCode;
     if(event.type === "keydown") {
         switch(code) {
-            case 73: //UP
+            case 38: //UP
                 if(!left && !down && !right && (acceleration == 5 || acceleration == 0)) { //Impedir que o clique rapido para tras bloqueie a aceleracao em 5
                     acceleration = -5; 
                     up = true;
                 }
                 break;
-            case 74: //LEFT
+            case 37: //LEFT
                 if(!up && !down && !right && velocity == 0) { //Impede a rotaçao enquanto a cadeira anda 
                     direction = 1;
                     left = true;
                 }
                 break;
-            case 75: //DOWN
+            case 40: //DOWN
                 if(!left && !up && !right && (acceleration == -5 || acceleration == 0)) { //Impedir que o clique rapido para tras bloqueie a aceleracao em -5
                     acceleration = 5; 
                     down = true;
                 }
                 break;
-            case 76: //RIGHT
+            case 39: //RIGHT
                 if(!left && !down && !up && velocity == 0) { //Impede a rotaçao enquanto a cadeira anda 
                     direction = -1; 
                     right = true;
@@ -149,23 +149,23 @@ function onKeyDown(event) {
 
 function onKeyUp(event){
     switch(event.keyCode){
-        case 73: //UP
+        case 38: //UP
             if(up) {
                 acceleration = 5;
                 up = false;
             }
             break;
-        case 74: //LEFT
+        case 37: //LEFT
             if(left)
                 left = false;
             break;
-        case 75: //DOWN
+        case 40: //DOWN
             if (down) {
                 acceleration = -5;
                 down = false;
             }
             break;
-        case 76: //RIGHT
+        case 39: //RIGHT
             if(right)
                 right = false;
             break;
@@ -217,4 +217,5 @@ function init(){
     
 
     controls = new THREE.OrbitControls(camera, renderer.domELement);
+    controls.enableKeys = false;
 }
