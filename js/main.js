@@ -11,6 +11,7 @@ var axis = new THREE.Vector3(0, 1, 0);
 var direction = 1;
 var chair = new Chair();
 var angle = 0;
+var plane;
 
 var up = false;
 var down = false;
@@ -20,10 +21,11 @@ var right = false;
 function addPlane(){
     var geometry = new THREE.PlaneGeometry( 20, 20 , 20 );
     var material = new THREE.MeshBasicMaterial( {color: 0xa9a9a9, side: THREE.DoubleSide, wireframe: true} );
-    var plane = new THREE.Mesh(geometry, material);
+    plane = new THREE.Mesh(geometry, material);
     plane.rotateX(Math.PI / 2);
     plane.position.set(0, -2, 0);
-    
+    plane.visible = false;
+
     scene.add(plane);
 }
 
@@ -194,6 +196,9 @@ function onKeyUp(event){
             camera.position.z = 12;
             camera.lookAt(scene.position);
             break;
+        case 80: //p ou P
+            plane.visible = !plane.visible;
+            break;
     }
 }
 
@@ -213,8 +218,6 @@ function init(){
 
     window.addEventListener('keypress', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
-
-    
 
     controls = new THREE.OrbitControls(camera, renderer.domELement);
     controls.enableKeys = false;
