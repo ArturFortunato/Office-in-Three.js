@@ -2,21 +2,20 @@ var camera, scene, render;
 var geometry, material, mesh;
 var controls;
 var currentCamera = 1;
-var table_obj = [];
-var lamp_obj = [];
 var acceleration = 0;
 var velocity = 0;
 var clock = new THREE.Clock();
 var delta = 0;
 var VELOCITY_MAX = 15;
 var axis = new THREE.Vector3(0, 1, 0);
-var rotate_bool = 0;
 var direction = 1;
-var fez_coisas_com_73;
-var fez_coisas_com_75;
-var canIrefreshMesh = false;
-var rotate_wheels = false;
-var chair = new THREE.Object3D();
+var chair = new Chair();
+var angle = 0;
+
+var up = false;
+var down = false;
+var left = false;
+var right = false;
 
 function addPlane(){
     var geometry = new THREE.PlaneGeometry( 20, 20 , 20 );
@@ -27,7 +26,6 @@ function addPlane(){
     
     scene.add(plane);
 }
-
 
 function animate(){
     
@@ -44,6 +42,7 @@ function createScene(){
     createSeat();
     createTable();
     createLamp();
+    scene.updateMatrixWorld(true);
 }
 
 function createCamera(){
@@ -74,137 +73,131 @@ function onResize(){
 }
 
 function refreshChairPosition() {
-    if(rotate_wheels)
-        rotateWheels()
-    if(rotate_bool)
+    delta = clock.getDelta();
+    canTranslate = true;
+    if((up || down) && angle != 0)
+        canTranslate = rotateWheels();
+    if (left || right)
         rotateChair();
-    else
+    else if(canTranslate)
         translateChair();
 }
 
 function rotateChair() { //Direction: 1 --> clockwise; -1 --> counter-clockwise
-    delta = clock.getDelta();
-    chair.children[0].rotateOnAxis(axis, rotate_bool * direction * Math.PI / 180);
-    rotate_Wheels = true;
+    chair.children[0].rotateOnAxis(axis, direction * Math.PI / 180);
+    angle += direction * Math.PI / 180;
 }
 
 function rotateWheels() {
-    angle = (new THREE.Vector3(chair.children[0].matrixWorld.elements[2], 0, chair.children[0].matrixWorld.elements[0])).angleTo(new THREE.Vector3(chair.children[2].matrixWorld.elements[2], 0, chair.children[2].matrixWorld.elements[0]));
-    console.log(angle);
-    if(chair.children[0].matrixWorld.elements[2]*chair.children[2].matrixWorld.elements[0] - chair.children[0].matrixWorld.elements[0]*chair.children[2].matrixWorld.elements[2] < 0)
-        angle = -angle;
+    var positive = angle > 0 ? true : false;
     for(i = 0; i < 6; i++)
-        chair.children[2].children[i].setRotationFromAxisAngle(new THREE.Vector3(0, 1, 0), (Math.PI /2) - angle);
-    rotate_wheels = false;
+        chair.children[2].children[i].rotateOnAxis(new THREE.Vector3(0, 1, 0), (angle > 0 ? 1 : -1) * Math.PI / 20);
+
+    angle -= (positive ? 1 : -1) * (Math.PI / 20);
+
+    if((angle == 0) || (positive && angle < 0) || (!positive && angle > 0)) {
+        angle = 0;
+        return true;
+    }
+    return false;
 }
 
 function translateChair() {
-    delta = clock.getDelta();
     previous_velocity = velocity;
     velocity += acceleration * delta;
     if (velocity * previous_velocity < 0) {
         velocity = 0;
         acceleration = 0;
     }
-    else if (Math.abs(velocity) >= VELOCITY_MAX)
+    else if (Math.abs(velocity) >= VELOCITY_MAX) {
         acceleration = 0;
-    //chair.translateZ(velocity * delta + 0.5 * acceleration * delta * delta);
-    //chair.translateX(velocity * delta + 0.5 * acceleration * delta * delta);
-    
+    }  
     chair.translateOnAxis(new THREE.Vector3(chair.children[0].matrixWorld.elements[8], 0, chair.children[0].matrixWorld.elements[0]), velocity * delta + 0.5 * acceleration * delta * delta);
 }
 
-function onKeyDown(event){
+function onKeyDown(event) {
     var code = event.keyCode;
     if(event.type === "keydown") {
-        switch(code){
-            case 74: //Left
-                if(acceleration === 0) {
-                    rotate_bool = 1;
-                    direction = 1;
-                }
-                break;
-            case 73: //Up
-                if(rotate_bool === 0 && acceleration === 0 && velocity === 0) {
-                    fez_coisas_com_73 = true;
+        switch(code) {
+            case 73: //UP
+                if(!left && !down && !right && (acceleration == 5 || acceleration == 0)) { //Impedir que o clique rapido para tras bloqueie a aceleracao em 5
                     acceleration = -5; 
-                    translate = true; 
-                    rotate_wheels = true; 
+                    up = true;
                 }
                 break;
-            case 76: //Right
-                if(acceleration === 0) {
-                    rotate_bool = 1;
-                    direction = -1;
+            case 74: //LEFT
+                if(!up && !down && !right && velocity == 0) { //Impede a rotaçao enquanto a cadeira anda 
+                    direction = 1;
+                    left = true;
                 }
                 break;
-            case 75: //Down
-                if(rotate_bool === 0 && acceleration === 0 && velocity === 0) {
-                    fez_coisas_com_75 = true;
-                    acceleration = 5;
-                    translate = true;
-                    rotate_wheels = true;
+            case 75: //DOWN
+                if(!left && !up && !right && (acceleration == -5 || acceleration == 0)) { //Impedir que o clique rapido para tras bloqueie a aceleracao em -5
+                    acceleration = 5; 
+                    down = true;
                 }
                 break;
-            case 65: //a ou A
-                scene.traverse(function (node){
-                    if(node instanceof THREE.Mesh){
-                        node.material.wireframe = !node.material.wireframe;
-                    }
-                });
-                break;
-            case 49: //1
-                camera.position.x = 0;
-                camera.position.y = 12;
-                camera.position.z = 0;
-                camera.lookAt(scene.position);
-                break;
-            case 50: //2
-                camera.position.x = 0;
-                camera.position.y = 0;
-                camera.position.z = -12;
-                camera.lookAt(scene.position);
-                break;
-            case 51: //3   
-                camera.position.x = -10;
-                camera.position.y = 0;
-                camera.position.z = 0;
-                camera.lookAt(scene.position);
-                break;
-            default:
+            case 76: //RIGHT
+                if(!left && !down && !up && velocity == 0) { //Impede a rotaçao enquanto a cadeira anda 
+                    direction = -1; 
+                    right = true;
+                }
                 break;
         }
     }
-    render();
 }
 
-function onKeyUp(event) {
-    switch(event.keyCode) {
+function onKeyUp(event){
+    switch(event.keyCode){
         case 73: //UP
-            if(fez_coisas_com_73) {
-                fez_coisas_com_73 = false;
+            if(up) {
                 acceleration = 5;
+                up = false;
             }
-            translate = false;
             break;
         case 74: //LEFT
-            rotate_bool = 0;
+            if(left)
+                left = false;
             break;
         case 75: //DOWN
-            if(fez_coisas_com_75) {
-                fez_coisas_com_75 = false;
+            if (down) {
                 acceleration = -5;
+                down = false;
             }
-            translate = false;
             break;
         case 76: //RIGHT
-            rotate_bool = 0;
+            if(right)
+                right = false;
+            break;
+        case 65: //a ou A
+            scene.traverse(function (node){
+                if(node instanceof THREE.Mesh){
+                    node.material.wireframe = !node.material.wireframe;
+                }
+            });
+            break;
+        case 49: //1
+            camera.position.x = 12;
+            camera.position.y = 0;
+            camera.position.z = 0;
+            camera.lookAt(scene.position);
+            break;
+        case 50: //2
+            camera.position.x = 0;
+            camera.position.y = 12;
+            camera.position.z = 0;
+            camera.lookAt(scene.position);
+            break;
+        case 51: //3   
+            camera.position.x = 0;
+            camera.position.y = 0;
+            camera.position.z = 12;
+            camera.lookAt(scene.position);
             break;
     }
 }
 
 function init(){
-
     renderer = new THREE.WebGLRenderer();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
