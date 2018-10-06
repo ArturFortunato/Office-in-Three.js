@@ -52,9 +52,10 @@ function createSeat(){
     wheels.addElement(1.05, -1.80, -0.40, new THREE.TorusGeometry(0.10, 0.10, 10, 20)); // Roda da frente, direita
     wheels.addElement(1.05, -1.80, -0.40, new THREE.TorusGeometry(0.10, 0.10, 10, 20));  //Roda da frente, direita
 
-    for(i = 0; i < 6; i++)
+    for(i = 0; i < 6; i++) {
         wheels.rotateMesh(wheels.children[i], Math.PI / 2, 'y');
-    
+        wheels.children[i].add( new THREE.AxesHelper( 1 ) ); 
+    }   
     chair.add(topPart);
     chair.add(downPart);
     chair.add(wheels);
