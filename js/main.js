@@ -150,7 +150,7 @@ function onKeyDown(event) {
 function onKeyUp(event){
     switch(event.keyCode){
         case 38: //UP
-            if(up) {
+            if(up && velocity < 0) {
                 acceleration = 5;
                 up = false;
             }
@@ -160,7 +160,7 @@ function onKeyUp(event){
                 left = false;
             break;
         case 40: //DOWN
-            if (down) {
+            if (down && velocity > 0) {
                 acceleration = -5;
                 down = false;
             }
